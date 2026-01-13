@@ -29,7 +29,7 @@ rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 # 실행 명령어
 build_ws에서 사용
 source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/local_setup.bash
-source ~/IsaacSim-ros_workspaces/build_ws/humble/isaac_sim_ros_ws/install/local_setup.bash
+source ~/IsaacSim-ros_workspaces/build_ws/humble/isaac_sim_ros_ws/install/local_setup.bash \
 ~/isaacsim/isaac-sim.sh
 
 dsr_controller2_backup   dsr_gazebo2_backup    dsr_mujoco_backup
