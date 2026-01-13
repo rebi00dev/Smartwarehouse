@@ -1,6 +1,7 @@
 devel/
-logs/
-build/
+**/logs/
+**/build/
+**/install/
 bin/
 lib/
 msg_gen/
@@ -44,7 +45,18 @@ qtcreator-*
 
 *~
 
+# Docker
+.docker/
+docker-volumes/
 # Emacs
+
+#python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+
 .#*
 
 # Catkin custom files
