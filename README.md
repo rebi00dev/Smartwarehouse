@@ -17,7 +17,8 @@ sudo ./build_ros.sh \
 
 # Change log
 0.0.1 : read me edit \
-0.0.2 : add gripper (onrobot rg2) and assemble with robot arm (doosan robot M0609)
+0.0.2 : add gripper (onrobot rg2) and assemble with robot arm (doosan robot M0609) \
+0.0.3 : physical 
 # ros 활용
 cd ~/IsaacSim-ros_workspaces/humble_ws \
 

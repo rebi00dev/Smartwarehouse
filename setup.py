@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'Smartwarehouse'
+package_name = 'smartwarehouse'
 
 setup(
     name=package_name,
@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'dsr_test = smartwarehouse.dsr_move:main',
         ],
     },
 )
