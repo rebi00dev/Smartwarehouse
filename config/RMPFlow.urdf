@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="ur10">
+  <joint name="shoulder_pan_joint" type="revolute">
+    <origin xyz="0. 0. 0.1273" rpy="0. 0. -3.1415925"/>
+    <parent link="base_link"/>
+    <child link="shoulder_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-6.2831853" upper="6.2831853" effort="330." velocity="2.0943951"/>
+  </joint>
+  <joint name="shoulder_lift_joint" type="revolute">
+    <origin xyz="0. 0. 0." rpy="1.5707964 0. 0. "/>
+    <parent link="shoulder_link"/>
+    <child link="upper_arm_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-6.2831853" upper="6.2831853" effort="330." velocity="2.0943951"/>
+  </joint>
+  <joint name="elbow_joint" type="revolute">
+    <origin xyz="-0.612 0. 0. " rpy="0. 0. 0."/>
+    <parent link="upper_arm_link"/>
+    <child link="forearm_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-3.1415927" upper="3.1415927" effort="150." velocity="3.1415927"/>
+  </joint>
+  <joint name="wrist_1_joint" type="revolute">
+    <origin xyz="-0.5723 0. 0.163941" rpy="0. 0. 0."/>
+    <parent link="forearm_link"/>
+    <child link="wrist_1_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-6.2831853" upper="6.2831853" effort="56." velocity="3.1415927"/>
+  </joint>
+  <joint name="wrist_2_joint" type="revolute">
+    <origin xyz="0. -0.1157 0. " rpy="1.5707964 0. 0. "/>
+    <parent link="wrist_1_link"/>
+    <child link="wrist_2_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-6.2831853" upper="6.2831853" effort="56." velocity="3.1415927"/>
+  </joint>
+  <joint name="wrist_3_joint" type="revolute">
+    <origin xyz="0. 0.0922 -0. " rpy="-1.5707964 -0.0000001 0.0000001"/>
+    <parent link="wrist_2_link"/>
+    <child link="wrist_3_link"/>
+    <axis xyz="0. 0. 1."/>
+    <limit lower="-6.2831853" upper="6.2831853" effort="56." velocity="3.1415927"/>
+  </joint>
+  <joint name="ee_joint" type="fixed">
+    <origin xyz="-0. -0. -0." rpy="3.1415926 -1.57079638 0."/>
+    <parent link="wrist_3_link"/>
+    <child link="ee_link"/>
+  </joint>
+  <joint name="world_joint" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+  </joint>
+
+  <link name="world"/>
+  
+  <link name="base_link">   
+  </link>
+  <link name="forearm_link">   
+  </link>
+  <link name="shoulder_link">   
+  </link>
+  <link name="upper_arm_link">   
+  </link>
+  <link name="wrist_1_link">   
+  </link>
+  <link name="wrist_2_link">  
+  </link>
+  <link name="wrist_3_link">   
+  </link>
+  <link name="ee_link">    
+  </link>
+</robot>
