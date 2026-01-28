@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'dsr_test = smartwarehouse.dsr_move:main',
+            'dsr_solver = smartwarehouse.ik_solver:main',
         ],
     },
 )
