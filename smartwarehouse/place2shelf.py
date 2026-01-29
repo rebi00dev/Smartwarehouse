@@ -12,7 +12,7 @@ class PlaceAction(BaseAction):
         DR_init.__dsr__node = node
         self.node = node
         self.DR = DR
-        self.place_pose = poses['Place']
+        self.place_pose = poses['place']
         self.target_pose = poses[target_name]
 
         self.gripper = GripperController()

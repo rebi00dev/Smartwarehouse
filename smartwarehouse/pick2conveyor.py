@@ -14,7 +14,7 @@ class PickAction(BaseAction):
         DR_init.__dsr__node = node
         self.node = node
         self.DR = DR
-        self.pick_pose = poses['Pick']
+        self.pick_pose = poses['pick']
         self.target_pose = target_pose
 
         self.max_retry = 3
