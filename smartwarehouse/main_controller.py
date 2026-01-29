@@ -8,7 +8,7 @@ import numpy as np
 
 from std_msgs.msg import String
 from ament_index_python.packages import get_package_share_directory
-
+from .creat_tcp import TcpManager
 from .gripper_controller import GripperController
 from .pick2conveyor import PickAction
 from .place2shelf import PlaceAction
@@ -56,12 +56,14 @@ def main():
         raise
     #=================================================================
     # # 툴베이스 설정 ###############################################################변경 필요
-    DR.set_robot_mode(0)
-
-    # DR.set_tool("Tool Weight v2")
-    # DR.set_tcp("GripperDA_v2")
-    # DR.set_ref_coord(DR.DR_BASE)
-
+    DR. set_robot_mode(0)
+        
+    setup = TcpManager(node)
+    time.sleep(2)
+    # TCP 설정 실행
+    setup.set_new_tcp('tcp1', [0.0, 0.0, 220.0, 0.0, 180.0, 0.0])
+    DR.set_tcp('tcp1')
+    time.sleep(2)
     DR.set_robot_mode(1)
 
     #===================================================================================================
