@@ -8,8 +8,9 @@ class MoveHomeAction(BaseAction):
         DR_init.__dsr__node = node
 
         self.DR = DR
-        self.hom_pose_pose = poses['home']
+        self.hom_pose_pose = poses['waypoint']
         self.node = node
+
 
     # 실행되는 동작
     def execute(self):
