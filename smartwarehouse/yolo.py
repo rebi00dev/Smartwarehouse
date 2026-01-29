@@ -37,7 +37,7 @@ class YoloDetectAction(BaseAction):
     def depth_callback(self,msg):
         self.depth = msg
 
-    def execute(self, target_name):
+    def execute(self):
         while rclpy.ok():
             rclpy.spin_once(self.node, timeout_sec=0.1)
             if self.rgb and self.depth and self.info:
@@ -49,30 +49,34 @@ class YoloDetectAction(BaseAction):
         depth_img = self.bridge.imgmsg_to_cv2(self.depth, "passthrough")
 
         results = self.model(cv_img, verbose=False)
-
-        cam_coords = None
+        best_detection = None
+        highest_conf = 0.0
 
         for r in results:
             for box in r.boxes:
-                label = self.model.names[int(box.cls[0])]
-                if label == target_name:
+                conf = float(box.conf[0]) # 신뢰도 점수
+                if conf > highest_conf: # 가장 확실한 물체 하나 선택
+                    highest_conf = conf
+                    label = self.model.names[int(box.cls[0])]
+                    
                     b = box.xyxy[0].to('cpu').numpy()
                     u, v = int((b[0] + b[2]) / 2), int((b[1] + b[3]) / 2)
                     
                     z = self._get_safe_depth(depth_img, u, v)
                     if z > 0:
                         cam_coords = self._project_to_3d(u, v, z, self.info.k)
-                        break
-            if cam_coords: 
-                break
-        if cam_coords is None:
+                        best_detection = (label, cam_coords)
+
+        if best_detection is None:
             return None
 
-        self.rgb = self.depth = None 
+        detected_name, cam_coords = best_detection
+        
+        # 좌표 변환
         current_posx, _ = self.dr.get_current_posx()
         base_coords = self.transform_to_base(cam_coords, current_posx)
         
-        return target_name, base_coords
+        return detected_name, base_coords # 여기서 자동으로 찾은 이름과 좌표를 반환
             
     
     def transform_to_base(self, camera_coords, robot_posx):
