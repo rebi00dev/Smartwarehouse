@@ -1,23 +1,9 @@
-import os
 import time
-import sys
-from scipy.spatial.transform import Rotation
-import rclpy
-import numpy as np
 import DR_init
 import time
 from .base_action import BaseAction
 from .gripper_controller import GripperController
 
-
-from od_msg.srv import SrvDepthPosition
-from std_srvs.srv import Trigger
-from ament_index_python.packages import get_package_share_directory
-
-package_path = get_package_share_directory("co_cocktail_robot")
-
-DEPTH_OFFSET = -5.0
-MIN_DEPTH = 2.0
 
 VELOCITY, ACCURACY = 80, 60
 DR = None
