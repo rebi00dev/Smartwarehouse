@@ -28,7 +28,9 @@ sudo ./build_ros.sh \
 1.1 : Main Controller code add \
 1.2 : Move home code add \
 1.3 : Waypoint code add \
-1.3 : Pick2conveyor add \
+1.4 : Pick2conveyor add \
+1.5 : Place2shelf add \
+
 # ros 활용
 cd ~/IsaacSim-ros_workspaces/humble_ws \
 
