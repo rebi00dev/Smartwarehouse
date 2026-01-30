@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float64
+from sensor_msgs.msg import JointState
 import time
 
 class GripperController(Node):
@@ -19,45 +19,68 @@ class GripperController(Node):
         self.state = 0.0
         self.reached = False
         self.grasp = False
-        self.tolerance = 0.5
+        self.tolerance = 1.5
+        # Joint State setting ======================================================
+        self.gripper_name = 'finger_width'
+        self.open_pos = 0.0
+        self.close_pos = -4.0
+        self.effort = 0
         # ROS setting ==============================================================
-        self.gripper_command_publisher = self.create_publisher(Float64,"/gripper_command",10)
-        self.gripper_state_subscriber = self.create_subscription(Float64,"/gripper_state",self.gripper_state_callback,10)
+        self.gripper_command_publisher = self.create_publisher(JointState,"/gripper_command",10)
+        self.gripper_state_subscriber = self.create_subscription(JointState,"/gripper_state",self.gripper_state_callback,10)
 
+    def state2percent(self,pos):
+        return max(
+            0.0,
+            min(
+                100.0,
+                100.0 * (pos - self.close_pos)
+                / (self.open_pos - self.close_pos)
+            )
+        )
+    def percent2state(self,percent):
+        return self.close_pos + \
+            (percent / 100.0) * (self.open_pos - self.close_pos)
     
+
     def gripper_state_callback(self,msg):
-        self.state = msg.data
+        if self.gripper_name not in msg.name:
+            return
+
+        idx = msg.name.index(self.gripper_name)
+        joint_pos = msg.position[idx]
+        self.effort = msg.effort[idx]
+        self.state = self.state2percent(joint_pos)
+
 
     def open(self):
-        self.reached = False
+        self.grasp = False
         self.move_gripper(self.open_target)
     
     def close(self):
-        self.reached = False
         self.move_gripper(self.close_target)
 
-    def move_gripper(self,target_pose,step=1.0):
-        self.grasp = False
-        while rclpy.ok():
+    def move_gripper(self,target_pose,step=50.0):
+        self.reached = False
 
-            rclpy.spin_once(self, timeout_sec=0.05)
+        rclpy.spin_once(self, timeout_sec=0.05)
 
-            prev_pos = self.state
-            diff = target_pose - self.state
+        diff = target_pose - self.state
 
-            if abs(diff) < self.tolerance:
-                self.reached = True
-                return True
-            
-            next_cmd = self.state + (step if diff > 0 else -step)
-            next_cmd = max(0.0, min(100.0, next_cmd))
-            self.gripper_command_publisher.publish(Float64(data=next_cmd))
-            
-            time.sleep(0.1)
-            rclpy.spin_once(self, timeout_sec=0.05)
-            
-            # grasp 닫는 중에만 감지 ===================================================================
-            if target_pose == self.close_target and abs(prev_pos - self.state) < 0.1:
-                if abs(self.state - target_pose) > self.tolerance:
-                    self.grasp = True
-                    return True 
+        if abs(diff) < self.tolerance:
+            self.reached = True
+            return True
+
+        
+        next_cmd = self.state + (step if diff > 0 else -step)
+        next_cmd = max(0.0, min(100.0, next_cmd))
+
+        joint_cmd = JointState()
+        joint_cmd.name = [self.gripper_name]
+        joint_cmd.position = [self.percent2state(next_cmd)]
+        self.gripper_command_publisher.publish(joint_cmd)
+        
+        time.sleep(0.1)
+        rclpy.spin_once(self, timeout_sec=0.05)
+        
+        return False

@@ -10,10 +10,9 @@ DR = None
 
 
 class PickAction(BaseAction):
-    def __init__(self, node, DR, poses, target_pose):
-        DR_init.__dsr__node = node
+    def __init__(self, node, dr, poses, target_pose):
         self.node = node
-        self.DR = DR
+        self.DR = dr
         self.pick_pose = poses['pick']
         self.target_pose = target_pose
 
@@ -27,7 +26,11 @@ class PickAction(BaseAction):
     def execute(self):
 
         # 그리퍼를 열고 대기 포즈로 이동
-        self.gripper.open()
+        self.gripper.reached = False
+        while not self.gripper.reached:
+                if self.gripper.reached:
+                    break
+                self.gripper.open()
         self.DR.movel(self.pick_pose, vel=VELOCITY, acc=ACCURACY)
         time.sleep(0.5)
 
@@ -40,19 +43,16 @@ class PickAction(BaseAction):
         self.DR.movel(self.target_pose, vel=VELOCITY/2, acc=ACCURACY/2)
 
         #그리퍼 닫기
-        self.gripper.close()
+        self.gripper.reached = False
+        while not self.gripper.reached:
+                if self.gripper.reached:
+                    break
+                self.gripper.close()
         time.sleep(1.0)
 
-        # 잡기 성공 여부 판단 및 들어올리기
-        if self.gripper.grasp: 
-            # 물체를 수직으로 100mm 들어올림
-            retract_pose = list(self.target_pose)
-            retract_pose[2] += 100.0
-            self.DR.movel(retract_pose, vel=VELOCITY, acc=ACCURACY)
-            self.success = True
-        else:
-            self.DR.movel(approach_pose, vel=VELOCITY, acc=ACCURACY)
-            self.success = False
+        retract_pose = list(self.target_pose)
+        retract_pose[2] += 100.0
+        self.DR.movel(retract_pose, vel=VELOCITY, acc=ACCURACY)
 
         return self.success
          

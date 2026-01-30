@@ -13,7 +13,7 @@ from .gripper_controller import GripperController
 from .pick2conveyor import PickAction
 from .place2shelf import PlaceAction
 from .move_home import MoveHomeAction
-from .yolo import YoloDetectAction
+# from .yolo import YoloDetectAction
 from .waypoint import WaypointAction
 
 POSE_PATH = os.path.join(
@@ -37,9 +37,9 @@ def load_yaml(POSE_PATH):
 # action setting
 def action_build(node, DR, poses):
     return {'pick':lambda target_pose: PickAction(node, dr=DR, poses=poses['Pick'], target_pose=target_pose),
-            'place':lambda object, dict: PlaceAction(node, dr=DR, poses=poses['Place'], ingredient=object, dict=dict),
+            'place':lambda target_name: PlaceAction(node, dr=DR, poses=poses['Place'], target_name=target_name),
             'home':lambda : MoveHomeAction(node, dr=DR, poses=poses['Home']),
-            'yolo':lambda : YoloDetectAction(node, dr=DR),
+            # 'yolo':lambda : YoloDetectAction(node, dr=DR),
             'waypoint':lambda : WaypointAction(node, dr=DR, poses=poses['Waypoint']),
             }
 # ===================================================================================================
@@ -88,26 +88,22 @@ def main():
         try:
             # Home 위치 이동 ========================================================
             actions_build['home']().execute()
+            time.sleep(1)
             node.get_logger().info("Home 위치 도달. 물체 인식을 시작합니다.")
-
+            
             # Yolo data 확인 =======================================================
-            target_name, target_pose = actions_build['yolo']().execute()
-            if not target_name:
-                node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
-                time.sleep(5)
-                continue
-            node.get_logger().info(f"타겟 감지: {target_name}")
-
+            # target_name, target_pose = actions_build['yolo']().execute()
+            # if not target_name:
+            #     node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
+            #     time.sleep(5)
+            #     continue
+            # node.get_logger().info(f"타겟 감지: {target_name}")
+            target_pose = [480.939, 46.106, 120.048, 0.000, -45.000, 0.000]
+            target_name = 'clock'
             # pick ================================================================= 
-            pick_success = actions_build['pick'](target_pose).execute()
-            if not pick_success:
-                node.get_logger().error("물체를 잡는 데 실패했습니다. 처음으로 돌아갑니다.")
-                continue
-            node.get_logger().info(f"{target_name} pick 완료. home 위치 이동")
-
-            # home =================================================================
-            actions_build['home']().execute()
-            node.get_logger().info("이동 완료. waypoint 이동 ")
+            actions_build['pick'](target_pose).execute()
+            time.sleep(1)
+            node.get_logger().info(f"{target_name} pick 완료. waypoint 위치 이동")
 
             # waypoint =============================================================
             actions_build['waypoint']().execute()

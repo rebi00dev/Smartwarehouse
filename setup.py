@@ -29,7 +29,9 @@ setup(
     entry_points={
         'console_scripts': [
             'dsr_test = smartwarehouse.dsr_move:main',
-            'pose_find = smartwarehouse.pose_find:main',
+            'find_pos = smartwarehouse.pose_find:main',
+            'main = smartwarehouse.main_controller:main',
+            
         ],
     },
 )

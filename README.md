@@ -30,6 +30,11 @@ sudo ./build_ros.sh \
 1.3 : Waypoint code add \
 1.4 : Pick2conveyor add \
 1.5 : Place2shelf add \
+1.6 : setting tcp \
+1.7 : find pose for pose.yaml \
+1.8 : model direction change \
+1.9 : robot renew \
+
 
 # ros 활용
 cd ~/IsaacSim-ros_workspaces/humble_ws \

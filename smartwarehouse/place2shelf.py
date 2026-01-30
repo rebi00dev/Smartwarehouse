@@ -8,10 +8,10 @@ from .gripper_controller import GripperController
 VELOCITY, ACCURACY = 80, 60
 
 class PlaceAction(BaseAction):
-    def __init__(self, node, DR, poses, target_name):
+    def __init__(self, node, dr, poses, target_name):
         DR_init.__dsr__node = node
         self.node = node
-        self.DR = DR
+        self.DR = dr
         self.place_pose = poses['place']
         self.target_pose = poses[target_name]
 

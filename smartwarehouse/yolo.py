@@ -9,10 +9,10 @@ from scipy.spatial.transform import Rotation as R
 
 
 class YoloDetectAction(BaseAction):
-    def __init__(self, node, DR):
+    def __init__(self, node, dr):
         super().__init__(node)
         self.node = node
-        self.dr = DR
+        self.dr = dr
         self.bridge = CvBridge()
         self.model = YOLO('yolov8n.pt')  # YOLO 모델 로드
 
