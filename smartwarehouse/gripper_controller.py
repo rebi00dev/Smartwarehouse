@@ -19,11 +19,11 @@ class GripperController(Node):
         self.state = 0.0
         self.reached = False
         self.grasp = False
-        self.tolerance = 1.5
+        self.tolerance = 0.5
         # Joint State setting ======================================================
         self.gripper_name = 'finger_width'
-        self.open_pos = 0.0
-        self.close_pos = -4.0
+        self.open_pos = -1.0
+        self.close_pos = -3.0
         self.effort = 0
         # ROS setting ==============================================================
         self.gripper_command_publisher = self.create_publisher(JointState,"/gripper_command",10)
@@ -50,6 +50,7 @@ class GripperController(Node):
         idx = msg.name.index(self.gripper_name)
         joint_pos = msg.position[idx]
         self.effort = msg.effort[idx]
+        
         self.state = self.state2percent(joint_pos)
 
 
@@ -60,14 +61,17 @@ class GripperController(Node):
     def close(self):
         self.move_gripper(self.close_target)
 
-    def move_gripper(self,target_pose,step=50.0):
+    def move_gripper(self,target_pose,step=5.0):
         self.reached = False
 
         rclpy.spin_once(self, timeout_sec=0.05)
 
         diff = target_pose - self.state
-
-        if abs(diff) < self.tolerance:
+        # if self.effort > 0.01 and self.state < -2.0:
+        #     self.grasp = True
+        # else:
+            # self.grasp = False
+        if abs(diff) < self.tolerance or self.grasp:
             self.reached = True
             return True
 

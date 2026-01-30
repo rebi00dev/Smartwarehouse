@@ -93,13 +93,14 @@ def main():
             
             # Yolo data 확인 =======================================================
             # target_name, target_pose = actions_build['yolo']().execute()
-            # if not target_name:
-            #     node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
-            #     time.sleep(5)
-            #     continue
-            # node.get_logger().info(f"타겟 감지: {target_name}")
-            target_pose = [480.939, 46.106, 120.048, 0.000, -45.000, 0.000]
+            target_pose = [480.939, 51.106, 105.048, 0.000, -45.000, 0.000]
             target_name = 'clock'
+            if not target_name:
+                node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
+                time.sleep(5)
+                continue
+            node.get_logger().info(f"타겟 감지: {target_name}")
+            
             # pick ================================================================= 
             actions_build['pick'](target_pose).execute()
             time.sleep(1)
@@ -108,14 +109,14 @@ def main():
             # waypoint =============================================================
             actions_build['waypoint']().execute()
             node.get_logger().info("이동 완료. place 시작")
-
+            time.sleep(5)
             # place ================================================================
             actions_build['place'](target_name).execute()
             node.get_logger().info(f"{target_name} place 완료. waypoint 이동.")
 
             # waypoint =============================================================
             actions_build['waypoint']().execute()
-            node.get_logger().info(f"{target_name} 이동 완료. home 위치 이동")
+            node.get_logger().info("이동 완료. home 위치 이동")
 
         except Exception as e:
             node.get_logger().error(f"실행 중 예외 발생: {e}")

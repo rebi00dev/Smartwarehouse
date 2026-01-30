@@ -53,6 +53,6 @@ class PickAction(BaseAction):
         retract_pose = list(self.target_pose)
         retract_pose[2] += 100.0
         self.DR.movel(retract_pose, vel=VELOCITY, acc=ACCURACY)
-
+        self.gripper.destroy_node()
         return self.success
          
