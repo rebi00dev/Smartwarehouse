@@ -33,6 +33,7 @@ This project simulates a simple smart warehouse environment with robot manipulat
 ---
 
 ## 폴더 구조 (Folder Structure)
+
 ```bash
 IsaacSim-ros_workspace 
 ├─ build_ros.sh         # ROS workspace 빌드 스크립트 \
@@ -44,6 +45,7 @@ IsaacSim-ros_workspace
 ├─ replicator/          # Isaac Sim Replicator 데이터 \
 └─ README.md
 ```
+
 ---
 
 ## 설치 및 빌드 (Installation & Build)
@@ -66,7 +68,7 @@ colcon build
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
 ```
 
-# 사용 방법 (ROS Usage)
+# 실행 방법 (How to run)
 1. 실행 환경 설정
 ```bash
 source ~/IsaacSim-ros_workspaces/build_ws/humble/humble_ws/install/local_setup.bash
@@ -114,16 +116,6 @@ sudo docker run --name isaac-sim -it --rm \
 2.2  : Transfer replicator file to YOLO file \
 2.3  : YOLO training with Docker \
 2.4  : Test best.pt with Docker 
-
-# 기여 (Contributing)
-
-1. 저장소를 Fork 합니다.
-
-2. 새로운 브랜치 생성 (git checkout -b feature/xyz)
-
-3. 코드 변경 후 커밋 (git commit -m "Add new feature")
-
-4. Pull Request 생성
 
 # 라이선스 (License)
 
