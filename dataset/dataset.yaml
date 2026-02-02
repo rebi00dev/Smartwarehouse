@@ -1,4 +1,4 @@
-path: /home/rokey/IsaacSim-ros_workspaces/humble_ws/src/smartwarehouse/yolo_data_output/dataset
+path: /workspace/dataset
 
 train: images/train
 val: images/val
