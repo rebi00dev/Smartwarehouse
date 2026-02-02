@@ -6,14 +6,12 @@ import DR_init
 import os, yaml
 import numpy as np
 
-from std_msgs.msg import String
 from ament_index_python.packages import get_package_share_directory
 from .creat_tcp import TcpManager
-from .gripper_controller import GripperController
 from .pick2conveyor import PickAction
 from .place2shelf import PlaceAction
 from .move_home import MoveHomeAction
-# from .yolo import YoloDetectAction
+from .yolo import YoloDetectAction
 from .waypoint import WaypointAction
 
 POSE_PATH = os.path.join(
@@ -39,7 +37,7 @@ def action_build(node, DR, poses):
     return {'pick':lambda target_pose: PickAction(node, dr=DR, poses=poses['Pick'], target_pose=target_pose),
             'place':lambda target_name: PlaceAction(node, dr=DR, poses=poses['Place'], target_name=target_name),
             'home':lambda : MoveHomeAction(node, dr=DR, poses=poses['Home']),
-            # 'yolo':lambda : YoloDetectAction(node, dr=DR),
+            'yolo':lambda : YoloDetectAction(node, dr=DR),
             'waypoint':lambda : WaypointAction(node, dr=DR, poses=poses['Waypoint']),
             }
 # ===================================================================================================
@@ -82,6 +80,7 @@ def main():
     except:
         raise SyntaxError('pose.yaml,action build')
     
+    phase = 1
     
     # 반복 시작 ====================================================================
     while True:
@@ -92,9 +91,22 @@ def main():
             node.get_logger().info("Home 위치 도달. 물체 인식을 시작합니다.")
             
             # Yolo data 확인 =======================================================
-            target_name, target_pose = actions_build['yolo']().execute()
-            target_pose = [480.939, 51.106, 105.048, 0.000, -45.000, 0.000]
-            target_name = 'clock'
+            actions_build['yolo']().execute()
+            if phase == 1:
+                target_pose = [485.939, 51.106, 105.048, 0.000, -45.000, 0.000]
+                target_name = 'clock'
+                phase = 2
+            elif phase == 2:
+                target_pose = [578.93, 218.53, 17.30, 0.000, -45.000, 0.000]
+                target_name = 'lemon'
+                phase = 3
+            elif phase == 3:
+                target_pose = [480.938, -174.573, 17.904, 0.000, -45.000, 0.000]
+                target_name = 'dice'
+                phase = 4
+            elif phase == 4:
+                target_pose = None
+                target_name = None
             if not target_name:
                 node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
                 continue

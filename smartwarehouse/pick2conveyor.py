@@ -37,6 +37,7 @@ class PickAction(BaseAction):
         # 물체 위로 접근
         approach_pose = list(self.target_pose)
         approach_pose[2] += 50.0  
+        print(approach_pose)
         self.DR.movel(approach_pose, vel=VELOCITY, acc=ACCURACY)
 
         # 잡기 위치로 하강
