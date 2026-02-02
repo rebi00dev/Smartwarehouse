@@ -34,6 +34,11 @@ sudo ./build_ros.sh \
 1.7 : find pose for pose.yaml \
 1.8 : model direction change \
 1.9 : robot renew \
+1.10 : movel test clock pick and place \
+2.1 : yolo data make with isaac sim replicator \
+2.2 : transfer replicator file to yolofile \
+2.3 : yolo training with docker \
+2.4 : test best.pt
 
 
 # ros 활용
