@@ -92,12 +92,11 @@ def main():
             node.get_logger().info("Home 위치 도달. 물체 인식을 시작합니다.")
             
             # Yolo data 확인 =======================================================
-            # target_name, target_pose = actions_build['yolo']().execute()
+            target_name, target_pose = actions_build['yolo']().execute()
             target_pose = [480.939, 51.106, 105.048, 0.000, -45.000, 0.000]
             target_name = 'clock'
             if not target_name:
                 node.get_logger().info("감지된 물체가 없습니다. 재시도 중...")
-                time.sleep(5)
                 continue
             node.get_logger().info(f"타겟 감지: {target_name}")
             
