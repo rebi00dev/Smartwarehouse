@@ -21,7 +21,7 @@ class YoloDetectAction(BaseAction):
 
     # -------------------- 실행 --------------------
     def execute(self):
-        self.node.get_logger().info("YoloLabelOnlyAction node init")
+        self.node.get_logger().info("YoloAction init")
 
         while rclpy.ok():
             rclpy.spin_once(self.node, timeout_sec=0.1)
@@ -45,8 +45,7 @@ class YoloDetectAction(BaseAction):
                 self.draw_label(annotated_img, x1, y1, f"{label}:{conf:.2f}")
 
         # 퍼블리시
-        for i in range(100):
-            self.publish_result(annotated_img)
+        self.publish_result(annotated_img)
 
     # -------------------- 유틸 --------------------
     def ros_image_to_numpy(self, msg):

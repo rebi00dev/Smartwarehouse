@@ -119,15 +119,15 @@ def main():
 
             # waypoint =============================================================
             actions_build['waypoint']().execute()
-            node.get_logger().info("이동 완료. place 시작")
+            node.get_logger().info("waypoint 이동 완료. place 시작")
             time.sleep(5)
             # place ================================================================
             actions_build['place'](target_name).execute()
             node.get_logger().info(f"{target_name} place 완료. waypoint 이동.")
-
+            
             # waypoint =============================================================
             actions_build['waypoint']().execute()
-            node.get_logger().info("이동 완료. home 위치 이동")
+            node.get_logger().info("waypoint 이동 완료. home 위치 이동")
 
         except Exception as e:
             node.get_logger().error(f"실행 중 예외 발생: {e}")
