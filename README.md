@@ -11,7 +11,9 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 
 - [기능 (Features)](#기능-features)
 - [기술 스택 (Tech stack) 및 환경](#기술-스택tech-stack-및-환경environment)
+- [시스템 구조 (System Architecture)](#시스템-구조(System-Architecture))
 - [데모 영상 (demo video)](#데모-영상)
+- [Troubleshooting](#Trouble-shooting)
 - [의존성 (dependencies)](#의존성-dependencies)
 - [폴더 구조 (Folder Structure)](#폴더-구조-folder-structure)
 - [설치 및 빌드 (Installation & Build)](#설치-및-빌드-installation--build)
@@ -29,10 +31,6 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - Pick & Place Workflow
 - Main Control Base Action
 
----
-
-## 데모 영상
-![smartwarehouse Demo](demo.gif)
 ---
 ## 기술 스택(Tech stack) 및 환경(Environment)
 
@@ -55,7 +53,30 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - **Language** : Python 3.10
 
 ---
+## 시스템 구조(System Architecture)
+```bash
+Camera (Isaac Sim)
+      ↓
+YOLO Detection
+      ↓
+ROS2 Main Controller
+      ↓
+Doosan Robot API
+      ↓
+RG2 Gripper Pick & Place
+```
+---
+## 데모 영상
+![smartwarehouse Demo](docs/demo.gif)
 
+## Troubleshooting
+
+During development, several integration issues arose between Isaac Sim, ROS2, YOLO, and the Doosan Robot API.
+These problems and their solutions are documented here:
+
+[Troubleshooting Document](docs/TROUBLESHOOTING.md)
+
+---
 ## 의존성 (Dependencies)
 
 #### ROS2 Packages
