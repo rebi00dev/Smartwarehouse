@@ -10,7 +10,9 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 ## 목차 (Table of Contents)
 
 - [기능 (Features)](#기능-features)
-- [기술 스택(Tech stack) 및 환경](#기술-스택tech-stack-및-환경environment)
+- [기술 스택 (Tech stack) 및 환경](#기술-스택tech-stack-및-환경environment)
+- [데모 영상 (demo video)](#데모-영상)
+- [의존성 (dependencies)](#의존성-dependencies)
 - [폴더 구조 (Folder Structure)](#폴더-구조-folder-structure)
 - [설치 및 빌드 (Installation & Build)](#설치-및-빌드-installation--build)
 - [실행 방법 (How to run)](#실행-방법-how-to-run)
@@ -29,6 +31,9 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 
 ---
 
+## 데모 영상
+![smartwarehouse Demo](demo.gif)
+---
 ## 기술 스택(Tech stack) 및 환경(Environment)
 
 #### 1. 운영체제 및 미들웨어 (Infrastructure)
@@ -51,6 +56,28 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 
 ---
 
+## 의존성 (Dependencies)
+
+#### ROS2 Packages
+The following ROS2 packages are required:
+
+```bash
+sudo apt-get install \
+ros-humble-gazebo-ros2-control \
+ros-humble-hardware-interface-testing \
+ros-humble-ament-cmake-clang-format
+```
+#### Python Libraries
+```bash
+pip install \
+numpy==1.24.3 \
+opencv-python==4.8.1.78 \
+torch==2.10.0 \
+torchvision==0.25.0 \
+ultralytics==8.4.9 \
+ultralytics-thop==2.0.18
+```
+--
 ## 폴더 구조 (Folder Structure)
 
 ```bash
@@ -85,7 +112,8 @@ cd IsaacSim_ros-workspaces/humble/src
 git clone https://github.com/DoosanRobotics/doosan-robot2.git
 git clone https://github.com/username/Smartwarehouse.git
 ```
-
+#### 2. Doosan emulator install
+- [doosan-robot2 git link](#https://github.com/DoosanRobotics/)
 #### 2. ROS2 빌드 (Workspace)
 ```bash
 cd ~/IsaacSim-ros_workspaces/humble_ws
@@ -142,6 +170,19 @@ ros2 run smartwarehouse main
 - 2.3  : YOLO training with Docker
 - 2.4  : Test best.pt with Docker 
 - 2.5  : Action test 
+
+## Reference
+#### 참고 문헌 (Reference)
+- [Doosan Robotics GitHub](https://github.com/DoosanRobotics/doosan-robot2) - 두산 로봇 ROS 2 공식 드라이버 및 DRL 가이드
+- [NVIDIA Isaac Sim Docs](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/index.html) - Isaac Sim 공식 문서
+- [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) - YOLOv8 모델 학습 및 추론
+- [OnRobot ROS 2 Support](https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver) - OnRobot 그리퍼 통합 참조
+
+## Acknowledgements
+
+이 프로젝트는 Doosan Robotics의 산업용 로봇 제어 언어(DRL)와 NVIDIA의 디지털 트윈 기술을 결합하여 스마트 물류 자동화 가능성을 탐색하기 위해 진행되었습니다.
+
+도움을 준 오픈소스 커뮤니티와 관련 라이브러리 개발자분들에게 감사드립니다.
 
 ## 라이선스 (License)
 
