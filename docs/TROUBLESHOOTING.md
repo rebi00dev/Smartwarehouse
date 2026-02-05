@@ -1,120 +1,156 @@
-## ✅ 트러블슈팅 = “진짜 개발자만” 할 수 있다
+# Troubleshooting
 
-면접관/실무자가 Git 볼 때 제일 먼저 보는 건
+## Summary of Issues
 
-> “그래서 뭐 만들었냐?” ❌
-> “어디서 막혔고, 어떻게 뚫었냐?” ✅
+* Isaac Sim time and ROS2 time synchronization problem
+* Camera coordinate and robot base coordinate mismatch
+* Pose reference difference between Isaac Sim and Doosan API
+* Rack structures causing severe frame drops in simulation
+* Doosan Emulator and Isaac Sim joint state communication issue
+* Incorrect TCP causing consistent Pick position errors
+* Docker GPU access, GUI display, and ROS2 networking conflict
+* Replicator dataset format not compatible with YOLO training
+* Unstable YOLO detection affecting robot motion
 
-특히 도영님 프로젝트는
 
-* Isaac Sim
-* ROS2
-* Doosan API
-* YOLO
-* Docker
 
-이 조합이면 **에러 안 나는 게 이상한 스택**임.
+## Unstable detection causing premature robot motion
 
-그래서 트러블슈팅이 있으면 이렇게 보인다:
+**Issue** \
+The robot started moving before YOLO detection results were stable, causing incorrect Pick attempts.
 
-> “아… 이 사람 이 스택을 ‘써본’ 게 아니라
-> ‘부딪혀서 해결해본’ 사람이구나”
+**Solution** \
+Applied a moving average filter and additional validation logic to confirm stable detection before motion execution.
 
-이 차이가 엄청 큼.
+**Result** \
+Reliable and repeatable Pick operation.
 
----
 
-## 📌 Git에 이런 섹션 있으면 미친 듯이 좋음
 
-README 아래쪽에
+## Isaac Sim time and ROS2 time synchronization problem
 
-# 🛠 Troubleshooting & Engineering Decisions
+**Issue** \
+ROS2 nodes intermittently stopped updating or behaved inconsistently during simulation.
 
-이 섹션 하나 있으면, 진짜 포트폴리오 급 올라감.
+**Solution** \
+Enabled simulation time for all ROS2 nodes:
 
-예를 들면 이런 것들 👇
+```python
+use_sim_time = True
+```
 
----
+**Result** \
+Stable topic updates and synchronized behavior between Isaac Sim and ROS2.
 
-### ❗ Isaac Sim ↔ ROS2 시간 동기화 문제
 
-**문제**
-Isaac Sim에서 퍼블리시되는 카메라 토픽과 ROS2 노드의 시간 기준이 달라
-YOLO 추론 타이밍과 로봇 제어 타이밍이 어긋나는 현상 발생
 
-**원인**
-Sim time과 ROS time 차이
+## Camera coordinate and robot base coordinate mismatch
 
-**해결**
-ROS2에서 `use_sim_time` 적용 및 메인 루프에서 동기화 구조 수정
+**Issue** \
+Object positions detected by the camera did not match the robot’s actual reachable coordinates.
 
----
+**Solution** \
+Applied proper TF transformation between camera frame and robot base frame using `/tf`.
 
-### ❗ 카메라 좌표 → 로봇 좌표 변환 오차
+**Result** \
+Accurate transformation of vision-based coordinates into robot task space.
 
-**문제**
-YOLO로 계산한 객체 중심 좌표로 로봇을 이동시키면 오차 발생
 
-**원인**
-카메라 좌표계와 로봇 베이스 좌표계의 변환 관계가 고려되지 않음
 
-**해결**
-Extrinsic 관계 계산 및 보정 행렬 적용
+## Pose reference difference between Isaac Sim and Doosan API
 
----
+**Issue** \
+The same pose values resulted in different robot positions between Isaac Sim and the Doosan API.
 
-### ❗ Doosan API와 Isaac Sim 동작 불일치
+**Solution** \
+Adjusted pose references by understanding the difference between:
 
-**문제**
-시뮬레이션 상의 위치와 로봇 API로 전달한 좌표가 일치하지 않음
+* Isaac Sim world frame
+* Doosan base/tool frame
 
-**해결**
-movel 기준 좌표계 재정의 및 pose 변환 로직 수정
+**Result** \
+Consistent robot motion across simulation and API control.
 
----
 
-### ❗ Docker 내부에서 YOLO + ROS2 + Isaac Sim 연동 이슈
+## Rack structures causing severe frame drops in simulation
 
-**문제**
-컨테이너 내부에서 GPU 인식 및 ROS2 통신 문제
+**Issue** \
+Adding multiple rack (shelf) models caused significant FPS drops and unstable simulation performance.
 
-**해결**
-NVIDIA runtime 설정 및 네트워크 모드 수정
+**Solution** \
 
----
+* Simplified rack meshes
+* Replaced complex colliders with simple box colliders
+* Reduced unnecessary mesh details
 
-이런 거 있으면?
+**Result** \
+Recovered simulation FPS and stable runtime performance.
 
-면접관이 Git 보고 바로 물어봄:
 
-> “이거 직접 해결하신 거예요?”
 
-이게 바로 **면접 유도 포인트**다.
+## Doosan Emulator and Isaac Sim joint state communication issue
 
----
+**Issue** \
+Robot commands were executed through the Doosan API, but the robot in Isaac Sim did not move.
 
-## 🔥 진짜 중요한 이유
+**Solution** \
 
-기능 설명은
+The /joint_command topic published by the Doosan Emulator was relayed and converted into the /joint_states topic that Isaac Sim subscribes to.
 
-> “잘 만들었네”
+**Result** \
+Proper synchronization between Doosan Emulator and Isaac Sim robot state.
 
-트러블슈팅은
 
-> “이 사람 뽑으면 문제 해결 맡겨도 되겠다”
 
-이 느낌을 준다.
+## Incorrect TCP causing consistent Pick position errors
 
----
+**Issue** \
+Even with accurate vision coordinates, Pick positions were consistently offset.
 
-## 결론
+**Solution** \
+Created and applied a custom TCP configuration for the gripper.
 
-✅ GitHub에 Troubleshooting 섹션 추가 = 포트폴리오 급상승
-✅ README보다 더 인상 깊을 수 있음
-✅ Solo 프로젝트일수록 효과 2배
+**Result** \
+Precise Pick & Place alignment.
 
----
 
-원하면,
-도영님이 겪었던 에러/문제들 말해주면
-👉 **Git에 바로 넣을 수 있는 Troubleshooting 문서**로 정리해줄게.
+
+## Docker GPU access, GUI display, and ROS2 networking conflict
+
+**Issue** \
+Inside Docker, GPU worked but GUI or ROS2 communication failed.
+
+**Solution** \
+
+```bash
+xhost +local:docker
+docker run --gpus all --net=host ...
+```
+
+**Result** \
+Simultaneous GPU usage, GUI display, and ROS2 communication inside Docker.
+
+
+
+## Replicator dataset format not compatible with YOLO training
+
+**Issue** \
+Bounding box annotations generated by Isaac Replicator were not directly usable for YOLO training.
+
+**Solution** \
+Converted dataset using `rep2yolo` and split into train/val sets.
+
+**Result** \
+Successful YOLO training with synthetic dataset.
+
+
+## Absence of Intuitive Gripper Control Interface
+
+**Issue** \
+The default gripper interface supported only low-level values (Position/Effort), making it difficult to implement intuitive control (0–100% opening/closing) and stable velocity scaling in high-level logic.
+
+**Solution** \
+Developed a custom ROS 2 Gripper Controller node. I implemented a mapping logic to normalize physical joint values into percentages and integrated a step-based command delivery system to ensure smooth movement.
+
+**Result** \
+Achieved a user-friendly control interface and prevented physical engine jittering caused by abrupt motion commands, ensuring flexible manipulation for various object sizes.

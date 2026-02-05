@@ -5,7 +5,7 @@ Isaac Sim workspace version: **5.0.0**, Python **3.10**.
 
 A smart warehouse simulation featuring YOLO-based object detection and robot pick-and-place manipulation.
 
----
+
 
 ## 목차 (Table of Contents)
 
@@ -14,6 +14,7 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - [시스템 구조 (System Architecture)](#시스템-구조(System-Architecture))
 - [데모 영상 (demo video)](#데모-영상)
 - [Troubleshooting](#Trouble-shooting)
+- [Environmnet Build](#environment-build)
 - [의존성 (dependencies)](#의존성-dependencies)
 - [폴더 구조 (Folder Structure)](#폴더-구조-folder-structure)
 - [설치 및 빌드 (Installation & Build)](#설치-및-빌드-installation--build)
@@ -21,7 +22,7 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - [Change Log](#change-log)
 - [라이선스 (License)](#라이선스-license)
 
----
+
 
 ## 기능 (Features)
 
@@ -31,7 +32,7 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - Pick & Place Workflow
 - Main Control Base Action
 
----
+
 ## 기술 스택(Tech stack) 및 환경(Environment)
 
 #### 1. 운영체제 및 미들웨어 (Infrastructure)
@@ -52,7 +53,7 @@ A smart warehouse simulation featuring YOLO-based object detection and robot pic
 - **Motion Planning** : DSL
 - **Language** : Python 3.10
 
----
+
 ## 시스템 구조(System Architecture)
 ```bash
 Camera (Isaac Sim)
@@ -61,11 +62,11 @@ YOLO Detection
       ↓
 ROS2 Main Controller
       ↓
-Doosan Robot API
+Doosan Robot API, RG2 Gripper
       ↓
-RG2 Gripper Pick & Place
+Pick & Place
 ```
----
+
 ## 데모 영상
 ![smartwarehouse Demo](docs/demo.gif)
 
@@ -76,7 +77,13 @@ These problems and their solutions are documented here:
 
 [Troubleshooting Document](docs/TROUBLESHOOTING.md)
 
----
+## Environment Build
+
+This project required building a complete warehouse simulation environment from scratch by integrating Isaac Sim, ROS2, the Doosan Robot API, sensors, and vision systems.
+
+The detailed process of constructing the USD scene, configuring robot and sensor communication, and setting up the training and execution environment is documented below.
+[Ennvironment Document](docs/ENVIRONMENTBUILD.md)
+
 ## 의존성 (Dependencies)
 
 #### ROS2 Packages
@@ -122,8 +129,6 @@ smartwarehouse
 ├── yolo_dockerfile/          # yolo 환경 구축을 위한 Dockerfile
 └── best.pt                   # YOLOv8 학습 완료 모델 가중치 (best.pt 등)
 ```
-
----
 
 ## 설치 및 빌드 (Installation & Build)
 #### 1. 저장소 클론
@@ -190,7 +195,8 @@ ros2 run smartwarehouse main
 - 2.2  : Transfer replicator file to YOLO file
 - 2.3  : YOLO training with Docker
 - 2.4  : Test best.pt with Docker 
-- 2.5  : Action test 
+- 2.5  : Action test
+- 2.6  : README.md update 
 
 ## Reference
 #### 참고 문헌 (Reference)
